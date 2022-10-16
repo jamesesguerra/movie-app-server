@@ -1,0 +1,27 @@
+const config = require("./utils/config");
+const express = require("express");
+const cors = require("cors");
+const middleware = require("./utils/middleware");
+const mongoose = require("mongoose");
+
+
+const app = express();
+
+mongoose.connect(config.MONGODB_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("error connecting to MongoDB:", err.message);
+  });
+
+app.use(express.json());
+app.use(cors());
+
+app.use("/lists", require("./controllers/list"));
+
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
+
+
+module.exports = app;
