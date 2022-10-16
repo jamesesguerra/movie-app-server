@@ -1,36 +1,35 @@
-require('dotenv').config();
-const express = require('express')
-const cors = require('cors')
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 
 
-const app = express()
+const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.use('/lists', require('./controllers/list'))
+app.use("/lists", require("./controllers/list"));
 
 const unknownEndpoint = (req, res) => {
-	res.status(404).send({ error: "unknown endpoint" })
-}
+  res.status(404).send({ error: "unknown endpoint" });
+};
 
-app.use(unknownEndpoint)
+app.use(unknownEndpoint);
 
 const errorHandler = (err, req, res, next) => {
-	console.error(err.message)
+  console.error(err.message);
 
-	if (err.name === "CastError") {
-		return res.status(400).send({ error: "malformatted id" })
-	} else if (err.name === "ValidationError") {
-		return res.status(400).json({ error: err.message })
-	}
+  if (err.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" });
+  } else if (err.name === "ValidationError") {
+    return res.status(400).json({ error: err.message });
+  }
 
-	next(err)
-}
+  next(err);
+};
 
-app.use(errorHandler)
+app.use(errorHandler);
 
+const PORT = process.env.PORT || 3001;
 
-const PORT = process.env.PORT || 3001
-
-app.listen(PORT, () => console.log('listening...'))
+app.listen(PORT, () => console.log("listening..."));
