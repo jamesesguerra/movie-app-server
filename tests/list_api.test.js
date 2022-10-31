@@ -1,9 +1,28 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
-
 const api = supertest(app);
+const List = require("../models/list");
 
+
+const initialLists = [
+  {
+    name: "New List",
+    description: "a new description"
+  },
+  {
+    name: "Another New List",
+    description: "another new description"
+  }
+];
+
+beforeEach(async() => {
+  await List.deleteMany({});
+  let listObject = new List(initialLists[0]);
+  await listObject.save();
+  listObject = new List(initialLists[1]);
+  await listObject.save();
+});
 
 test("lists are returned as json", async() => {
   await api
@@ -12,16 +31,17 @@ test("lists are returned as json", async() => {
     .expect("Content-Type", /application\/json/);
 });
 
-test("there are two lists", async() => {
+test("all lists are returned", async() => {
   const response = await api.get("/lists");
 
-  expect(response.body).toHaveLength(2);
+  expect(response.body).toHaveLength(initialLists.length);
 });
 
-test("the first list's description is a test description", async() => {
+test("a specific list is returned within the returned lists", async() => {
   const response = await api.get("/lists");
 
-  expect(response.body[0].description).toBe("Test description");
+  const contents = response.body.map(r => r.description);
+  expect(contents).toContain("a new description");
 });
 
 afterAll(() => {
