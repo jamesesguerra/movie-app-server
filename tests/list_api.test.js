@@ -1,27 +1,17 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
+const helper = require("./test_helper");
 const app = require("../app");
 const api = supertest(app);
+
 const List = require("../models/list");
-
-
-const initialLists = [
-  {
-    name: "New List",
-    description: "a new description"
-  },
-  {
-    name: "Another New List",
-    description: "another new description"
-  }
-];
 
 
 beforeEach(async() => {
   await List.deleteMany({});
-  let listObject = new List(initialLists[0]);
+  let listObject = new List(helper.initialLists[0]);
   await listObject.save();
-  listObject = new List(initialLists[1]);
+  listObject = new List(helper.initialLists[1]);
   await listObject.save();
 });
 
@@ -37,7 +27,7 @@ test("lists are returned as json", async() => {
 test("all lists are returned", async() => {
   const response = await api.get("/lists");
 
-  expect(response.body).toHaveLength(initialLists.length);
+  expect(response.body).toHaveLength(helper.initialLists.length);
 });
 
 
@@ -61,10 +51,10 @@ test("a valid list can be added", async() => {
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  const response = await api.get("/lists");
-  const contents = response.body.map(r => r.description);
+  const listsAtEnd = await helper.listsInDb();
+  expect(listsAtEnd).toHaveLength(helper.initialLists.length + 1);
 
-  expect(response.body).toHaveLength(initialLists.length + 1);
+  const contents = listsAtEnd.map(l => l.description);
   expect(contents).toContain("a test description");
 });
 
@@ -79,9 +69,9 @@ test("a list with no name is not added", async() => {
     .send(newList)
     .expect(400)
 
-  const response = await api.get("/lists");
+  const listsAtEnd = await helper.listsInDb();
 
-  expect(response.body).toHaveLength(initialNotes.length);
+  expect(listsAtEnd).toHaveLength(helper.initialNotes.length);
 });
 
 
