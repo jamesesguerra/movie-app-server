@@ -13,17 +13,17 @@ test("lists are returned as json", async() => {
 });
 
 test("there are two lists", async() => {
-    const response = await api.get("/lists");
+  const response = await api.get("/lists");
 
-    expect(response.body).toHaveLength(2);
-})
+  expect(response.body).toHaveLength(2);
+});
 
 test("the first list's description is a test description", async() => {
-    const response = await api.get("/lists");
+  const response = await api.get("/lists");
 
-    expect(response.body[0].description).toBe("Test description");
-})
+  expect(response.body[0].description).toBe("Test description");
+});
 
 afterAll(() => {
-    mongoose.connection.close();
+  mongoose.connection.close();
 });
