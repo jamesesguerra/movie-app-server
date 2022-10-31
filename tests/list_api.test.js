@@ -67,11 +67,11 @@ test("a list with no name is not added", async() => {
   await api
     .post("/lists")
     .send(newList)
-    .expect(400)
+    .expect(400);
 
   const listsAtEnd = await helper.listsInDb();
 
-  expect(listsAtEnd).toHaveLength(helper.initialNotes.length);
+  expect(listsAtEnd).toHaveLength(helper.initialLists.length);
 });
 
 
