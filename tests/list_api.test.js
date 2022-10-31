@@ -9,8 +9,10 @@ const List = require("../models/list");
 
 beforeEach(async() => {
   await List.deleteMany({});
+
   let listObject = new List(helper.initialLists[0]);
   await listObject.save();
+
   listObject = new List(helper.initialLists[1]);
   await listObject.save();
 });
@@ -72,6 +74,40 @@ test("a list with no name is not added", async() => {
   const listsAtEnd = await helper.listsInDb();
 
   expect(listsAtEnd).toHaveLength(helper.initialLists.length);
+});
+
+
+test("a specific list can be viewed", async() => {
+  const listsAtStart = await helper.listsInDb();
+
+  const listToView = listsAtStart[0];
+
+  const resultList = await api
+    .get(`/lists/${listToView.id}`)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  const processedListToView = JSON.parse(JSON.stringify(listToView));
+
+  expect(resultList.body).toEqual(processedListToView);
+});
+
+
+test("a list can be deleted", async() => {
+  const listsAtStart = await helper.listsInDb();
+  const listToDelete = listsAtStart[0];
+
+  await api
+    .delete(`/lists/${listToDelete.id}`)
+    .expect(204);
+
+  const listsAtEnd = await helper.listsInDb();
+
+  expect(listsAtEnd).toHaveLength(helper.initialLists.length - 1);
+
+  const contents = listsAtEnd.map(l => l.description);
+
+  expect(contents).not.toContain(listToDelete.description);
 });
 
 
