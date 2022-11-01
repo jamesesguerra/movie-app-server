@@ -13,7 +13,7 @@ const initialLists = [
 ];
 
 const nonExistingId = async() => {
-  const list = new List({ description: "will remove this soon" });
+  const list = new List({ name: "test", description: "will remove this soon" });
   await list.save();
   await list.remove();
 
