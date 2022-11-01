@@ -7,7 +7,11 @@ const listSchema = new mongoose.Schema({
     required: true
   },
   description: String,
-  movies: [Number]
+  movies: [Number],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }
 });
 
 listSchema.set("toJSON", {
