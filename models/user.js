@@ -1,20 +1,29 @@
-// const mongoose = require('mongoose')
-// require('dotenv').config();
+const mongoose = require("mongoose");
 
 
-// const url = process.env.MONGODB_URI;
+const userSchema = new mongoose.Schema({
+  username: String,
+  name: String,
+  passwordHash: String,
+  lists: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "List"
+    }
+  ]
+});
 
-// mongoose.connect(url)
-//     .then(() => {
-//         console.log('Connected to MongoDB.')
-//     })
-//     .catch((err) => console.log(err));
+userSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject._v;
+    delete returnedObject.passwordHash;
+  }
+});
 
+const User = mongoose.model("User", userSchema);
 
-// id
-// name str
-// description str
-// movies: array
-// user
+module.exports = User;
 
 
