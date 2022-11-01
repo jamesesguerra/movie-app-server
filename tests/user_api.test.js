@@ -14,17 +14,16 @@ describe("when there is initially one user in the db", () => {
     await User.deleteMany({});
 
     const passwordHash = await bcrypt.hash("secret", 10);
-    const user = new User({ username: "root", passwordHash });
+    const user = new User({ email: "root@gmail.com", passwordHash });
 
     await user.save();
   });
 
-  test("creation succeeds with a fresh username", async() => {
+  test("creation succeeds with a fresh email", async() => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
-      username: "kofinat",
-      name: "Kofi Nat",
+      email: "kofinat@gmail.com",
       password: "coffeenut"
     };
 
@@ -37,16 +36,15 @@ describe("when there is initially one user in the db", () => {
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
 
-    const usernames = usersAtEnd.map(u => u.username);
-    expect(usernames).toContain(newUser.username);
+    const emails = usersAtEnd.map(e => e.email);
+    expect(emails).toContain(newUser.email);
   });
 
-  test("creation fails with 400 if username is already taken", async() => {
+  test("creation fails with 400 if email is already taken", async() => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
-      username: "root",
-      name: "Superuser",
+      email: "root@gmail.com",
       password: "password123"
     };
 
@@ -56,7 +54,7 @@ describe("when there is initially one user in the db", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/)
     
-    expect(result.body.error).toContain("username must be unique");
+    expect(result.body.error).toContain("This email is already associated with an account.");
 
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);

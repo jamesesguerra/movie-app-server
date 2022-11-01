@@ -6,22 +6,21 @@ const User = require("../models/user");
 
 
 router.post("/", async(req, res) => {
-  const { username, name, password } = req.body;
+  const { email, password } = req.body;
 
-  // const existingUser = await User.findOne({ username });
+  const existingUser = await User.findOne({ email });
 
-  // if (existingUser) {
-  //   return res.status(400).json({
-  //     error: "username must be unique"
-  //   });
-  // }
+  if (existingUser) {
+    return res.status(400).json({
+      error: "This email is already associated with an account."
+    });
+  }
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
   const user = new User({
-    username,
-    name,
+    email,
     passwordHash
   });
 
