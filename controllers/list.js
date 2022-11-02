@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const List = require("../models/list");
+const User = require("../models/user");
 
 
 router.get("/", async(req, res, next) => {
@@ -30,13 +31,18 @@ router.get("/:id", async(req, res, next) => {
 router.post("/", async(req, res, next) => {
   const body = req.body;
 
+  const user = await User.findById(body.userId);
+
   const list = new List({
     name: body.name,
     description: body.description || "",
+    user: user._id
   });
 
   try {
     const savedList = await list.save();
+    user.lists = user.lists.concat(savedList._id);
+    await user.save();
     res.status(201).json(savedList);
   } catch(err) {
     next(err);

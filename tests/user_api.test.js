@@ -52,7 +52,7 @@ describe("when there is initially one user in the db", () => {
       .post("/users")
       .send(newUser)
       .expect(400)
-      .expect("Content-Type", /application\/json/)
+      .expect("Content-Type", /application\/json/);
     
     expect(result.body.error).toContain("This email is already associated with an account.");
 
