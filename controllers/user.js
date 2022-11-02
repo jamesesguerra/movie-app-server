@@ -6,7 +6,8 @@ const User = require("../models/user");
 
 
 router.get("/", async(req, res) => {
-  const users = await User.find({});
+  const users = await User
+    .find({}).populate("lists");
   res.json(users);
 });
 
