@@ -33,7 +33,7 @@ router.post("/", async(req, res) => {
 
   res
     .status(200)
-    .send({ token, email: user.email });
+    .send({ token, email: user.email, id: user._id });
 });
 
 module.exports = router;
