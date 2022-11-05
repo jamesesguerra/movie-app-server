@@ -17,6 +17,7 @@ ENV NODE_ENV production
 
 COPY . .
 
+RUN npm install cross-env -P
 RUN npm install
 FROM debian:bullseye
 
