@@ -7,10 +7,12 @@ const User = require("../models/user");
 
 
 router.get("/", async(req, res, next) => {
-  const lists = await List.find({});
+  const user = await User
+    .findById(req.query.userId).populate("lists");
 
   try {
-    res.json(lists);
+    if (user) res.json(user.lists);
+    else res.status(404).end();
   } catch(err) {
     next(err);
   }
