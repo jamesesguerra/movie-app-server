@@ -7,7 +7,12 @@ const listSchema = new mongoose.Schema({
     required: true
   },
   description: String,
-  movies: [Number],
+  movies: [
+    {
+      id: Number,
+      poster_path: String
+    }
+  ],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
