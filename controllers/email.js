@@ -7,13 +7,13 @@ const mailgun = new Mailgun(formData);
 
 const mg = mailgun.client({
     username: "api",
-    key: "44854abd303d4c4a58a5b46152145af0-fe9cf0a8-3a2b5ba2",
+    key: process.env.MAILGUN_API_KEY
 });
 
 router.get("/", async(req, res, next) => {
     try {
         mg.messages
-        .create("sandboxbfa31a6913b249f8ab29637fdef39c5e.mailgun.org", {
+        .create("sandbox936d4efff03f4ca3b19d65a15b0b056d.mailgun.org", {
             from: "jamesesguerra025@gmail.com",
             to: ["jamesesguerra025@gmail.com"],
             subject: "Hello world",
