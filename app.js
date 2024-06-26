@@ -22,6 +22,7 @@ app.use(express.static("build"));
 app.use("/lists", require("./controllers/list"));
 app.use("/users", require("./controllers/user"));
 app.use("/login", require("./controllers/login"));
+app.use("/email", require("./controllers/email"));
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
