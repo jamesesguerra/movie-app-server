@@ -10,15 +10,19 @@ const mg = mailgun.client({
     key: process.env.MAILGUN_API_KEY
 });
 
-router.get("/", async(req, res, next) => {
+router.post("/", async(req, res, next) => {
+    const {
+        mall, movie, restaurant, request
+    } = req.body;
+
     try {
         mg.messages
         .create("sandbox936d4efff03f4ca3b19d65a15b0b056d.mailgun.org", {
             from: "jamesesguerra025@gmail.com",
             to: ["jamesesguerra025@gmail.com"],
-            subject: "Hello world",
-            text: "Testing some mailgun awesomeness",
-            html: "<h1>Testing some mailgun awesomeness</h1>"
+            subject: "hbd site reply",
+            text: `I wanna go to ${mall}, watch ${movie}, eat ${restaurant}, and my request is ${request}`,
+            html: `<p>I wanna go to ${mall}, watch ${movie}, eat ${restaurant}, and my request is ${request}</p>`
         })
         .then(msg => res.send(msg))
         .catch(err => console.log(err))
